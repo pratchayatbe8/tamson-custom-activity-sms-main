@@ -1,0 +1,630 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>SMS Custom Activity</title>
+    <link rel="stylesheet" type="text/css" href="/slds/styles/salesforce-lightning-design-system.css" />
+    <script type="text/javascript" src="/js/libs/postmonger.min.js"></script>
+    <style>
+        .preContent {
+            background-color: white;
+            border: 1px solid #dddbda;
+            min-height: 600px;
+        }
+
+        #previewFrame {
+            width: 400px;
+            height: 95%;
+            margin-left: auto;
+            margin-right: auto;
+            display: block;
+            border: none;
+        }
+
+        .slds-dropdown .slds-listbox {
+            display: grid;
+            /* For full width dropdown li */
+        }
+
+        /* Override the border for .slds-has-error */
+        .slds-has-error {
+            border-width: 2px;
+        }
+    </style>
+    <style>
+        .popover-anchor {
+            position: relative;
+        }
+
+        .popover-anchor .slds-popover {
+            position: absolute;
+            top: 1.8rem;
+            left: -12px;
+            z-index: 10000;
+            width: 300px;
+        }
+    </style>
+</head>
+
+<body>
+    <article class="slds-card">
+        <div class="slds-card__header slds-grid">
+            <header class="slds-media slds-media_center slds-has-flexi-truncate">
+                <div class="slds-media__body">
+                    <h2 class="slds-card__header-title">
+                        <span>SMS Custom Activity</span>
+                    </h2>
+                </div>
+            </header>
+        </div>
+        <div class="slds-card__body slds-card__body_inner" id="workspace">
+            <div class="slds-grid slds-gutters">
+
+                <!-- Loading Spinner -->
+                <div class="slds-spinner_container slds-hide" id="spinner-loading">
+                    <div role="status" class="slds-spinner slds-spinner_medium">
+                        <span class="slds-assistive-text">Loading</span>
+                        <div class="slds-spinner__dot-a"></div>
+                        <div class="slds-spinner__dot-b"></div>
+                    </div>
+                </div>
+
+                <!-- Fields Select Section -->
+                <div class="slds-col slds-size_2-of-5">
+                    <div id="sms_section">
+
+
+                        <!-- SMS Field -->
+                        <div class="slds-form-element slds-form-element_stacked slds-size_3-of-3">
+                            <label class="slds-form-element__label" for="sms-oa-field">
+                                <abbr class="slds-required" title="required">* </abbr>SMS Official Account
+                            </label>
+                            <div class="slds-form-element__control">
+                                <div class="slds-combobox_container">
+                                    <div class="slds-combobox slds-dropdown-trigger_click"
+                                        style="top: auto;position: relative;display: inline-block;">
+                                        <div class="slds-combobox__form-element slds-input-has-icon slds-input-has-icon_right"
+                                            role="none">
+                                            <!-- Input Field -->
+                                            <input type="text" class="slds-input slds-combobox__input" id="sms-account"
+                                                aria-controls="sms-oa-field" aria-autocomplete="list" autocomplete="off"
+                                                role="combobox" placeholder="Search SMS" />
+                                            <!-- Search Icon -->
+                                            <span
+                                                class="slds-icon_container slds-icon-utility-search slds-input__icon slds-input__icon_right"
+                                                title="Search">
+                                                <svg class="slds-icon slds-icon slds-icon_xx-small slds-icon-text-default"
+                                                    viewBox="0 0 52 52" id="down" xmlns="http://www.w3.org/2000/svg">
+                                                    <path
+                                                        d="M8.3 14h35.4c1 0 1.7 1.3.9 2.2L27.3 37.4c-.6.8-1.9.8-2.5 0L7.3 16.2c-.7-.9-.1-2.2 1-2.2z" />
+                                                </svg>
+                                            </span>
+                                        </div>
+                                        <div id="sms-oa-field" role="listbox"
+                                            style="display: block;min-width: 100% !important;"
+                                            class="slds-dropdown  slds-dropdown_left slds-hide slds-size--1-of-1">
+                                            <ul class="slds-listbox slds-listbox_vertical" role="presentation"
+                                                style="max-height: 15rem; overflow-y: auto;">
+                                                <% smsAccount.forEach(item=> { %>
+                                                    <li role="presentation" class="slds-listbox__item"
+                                                        data-id="option-account" data-value="<%=item.OA_ID%>">
+                                                        <span
+                                                            class="slds-media slds-listbox__option slds-listbox__option_plain slds-media_small"
+                                                            style="min-width: min-content;padding: 0.5rem;"
+                                                            role="option" tabindex="-1">
+                                                            <div class="slds-grid slds-size--1-of-1">
+                                                                <div class="slds-col"
+                                                                    style="padding-left: 0rem;padding-right: 0rem;width:15px;max-width: 15px;">
+                                                                    <span class="slds-media__figure">
+                                                                        <svg class="slds-icon slds-icon slds-icon_xx-small slds-icon-text-default"
+                                                                            viewBox="0 0 52 52" id="check"
+                                                                            xmlns="http://www.w3.org/2000/svg">
+                                                                            <path data-id="checked-icon"
+                                                                                class="slds-hide"
+                                                                                d="M19.1 42.5L2.6 25.9c-.6-.6-.6-1.6 0-2.2l2.2-2.2c.6-.6 1.6-.6 2.2 0L19.4 34c.4.4 1.1.4 1.5 0L45.2 9.5c.6-.6 1.6-.6 2.2 0l2.2 2.2c.6.6.6 1.6 0 2.2L21.3 42.5c-.6.7-1.6.7-2.2 0z" />
+                                                                        </svg>
+                                                                    </span>
+                                                                </div>
+                                                                <div class="slds-col" style="padding-left:0.25rem;">
+                                                                    <span class="slds-media__body">
+                                                                        <span class="slds-truncate"
+                                                                            style="white-space: nowrap;padding: 0rem;"
+                                                                            data-id="select-account"
+                                                                            data-value="<%=item.OA_ID%>"
+                                                                            data-name="<%=item.OA_Name%>">
+                                                                            <%=item.OA_Name%>
+                                                                        </span>
+                                                                    </span>
+                                                                </div>
+                                                            </div>
+                                                        </span>
+                                                    </li>
+                                                    <%})%>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- SMS ID Field -->
+                        <div class="slds-form-element slds-form-element_stacked slds-size_3-of-3">
+                            <label class="slds-form-element__label" for="uid-select">
+                                <abbr class="slds-required" title="required">* </abbr>Phone
+                            </label>
+                            <div class="slds-form-element__control">
+                                <div class="slds-combobox_container">
+                                    <div class="slds-combobox slds-dropdown-trigger_click"
+                                        style="top: auto;position: relative;display: inline-block;">
+                                        <div class="slds-combobox__form-element slds-input-has-icon slds-input-has-icon_right"
+                                            role="none">
+                                            <!-- Input Field -->
+                                            <input type="text" class="slds-input slds-combobox__input" id="uid-input"
+                                                aria-controls="uid-select" aria-autocomplete="list" autocomplete="off"
+                                                role="combobox" placeholder="Search Phone" />
+                                            <!-- Search Icon -->
+                                            <span
+                                                class="slds-icon_container slds-icon-utility-search slds-input__icon slds-input__icon_right"
+                                                title="Search">
+                                                <svg class="slds-icon slds-icon slds-icon_xx-small slds-icon-text-default"
+                                                    viewBox="0 0 52 52" id="down" xmlns="http://www.w3.org/2000/svg">
+                                                    <path
+                                                        d="M8.3 14h35.4c1 0 1.7 1.3.9 2.2L27.3 37.4c-.6.8-1.9.8-2.5 0L7.3 16.2c-.7-.9-.1-2.2 1-2.2z" />
+                                                </svg>
+                                            </span>
+                                        </div>
+                                        <div id="uid-select" role="listbox"
+                                            style="display: block;min-width: 100% !important;"
+                                            class="slds-dropdown  slds-dropdown_left slds-hide slds-size--1-of-1">
+                                            <ul class="slds-listbox slds-listbox_vertical" role="presentation"
+                                                style="max-height: 15rem; overflow-y: auto;">
+                                                <!-- UL Items populated using JS -->
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+
+                        <div class="slds-form-element slds-form-element_stacked slds-size_3-of-3 slds-hide">
+                            <label class="slds-form-element__label" for="sms-type-field">
+                                <abbr class="slds-required" title="required">* </abbr>SMS Message Type
+                            </label>
+                            <div class="slds-form-element__control">
+                                <div class="slds-combobox_container">
+                                    <div class="slds-combobox slds-dropdown-trigger_click"
+                                        style="top: auto;position: relative;display: inline-block;">
+                                        <div class="slds-combobox__form-element slds-input-has-icon slds-input-has-icon_right"
+                                            role="none">
+                                            <input type="text" class="slds-input slds-combobox__input" id="sms-type"
+                                                aria-controls="sms-type-field" aria-autocomplete="list"
+                                                autocomplete="off" role="combobox"
+                                                placeholder="Search SMS Message Type" />
+                                            <span
+                                                class="slds-icon_container slds-icon-utility-search slds-input__icon slds-input__icon_right"
+                                                title="Search">
+                                                <svg class="slds-icon slds-icon slds-icon_xx-small slds-icon-text-default"
+                                                    viewBox="0 0 52 52" id="down" xmlns="http://www.w3.org/2000/svg">
+                                                    <path
+                                                        d="M8.3 14h35.4c1 0 1.7 1.3.9 2.2L27.3 37.4c-.6.8-1.9.8-2.5 0L7.3 16.2c-.7-.9-.1-2.2 1-2.2z" />
+                                                </svg>
+                                            </span>
+                                        </div>
+                                        <div id="sms-type-field" role="listbox"
+                                            style="display: block;min-width: 100% !important;"
+                                            class="slds-dropdown  slds-dropdown_left slds-hide slds-size--1-of-1">
+                                            <ul class="slds-listbox slds-listbox_vertical" role="presentation"
+                                                style="max-height: 15rem; overflow-y: auto;">
+                                                <% smsType.forEach(item=> { %>
+                                                    <li role="presentation" class="slds-listbox__item"
+                                                        data-id="option-type" data-value="<%=item.id%>">
+                                                        <span
+                                                            class="slds-media slds-listbox__option slds-listbox__option_plain slds-media_small"
+                                                            style="min-width: min-content;padding: 0.5rem;"
+                                                            role="option" tabindex="-1">
+                                                            <div class="slds-grid slds-size--1-of-1">
+                                                                <div class="slds-col"
+                                                                    style="padding-left: 0rem;padding-right: 0rem;width:15px;max-width: 15px;">
+                                                                    <span class="slds-media__figure">
+                                                                        <svg class="slds-icon slds-icon slds-icon_xx-small slds-icon-text-default"
+                                                                            viewBox="0 0 52 52" id="check"
+                                                                            xmlns="http://www.w3.org/2000/svg">
+                                                                            <path data-id="checked-icon"
+                                                                                class="slds-hide"
+                                                                                d="M19.1 42.5L2.6 25.9c-.6-.6-.6-1.6 0-2.2l2.2-2.2c.6-.6 1.6-.6 2.2 0L19.4 34c.4.4 1.1.4 1.5 0L45.2 9.5c.6-.6 1.6-.6 2.2 0l2.2 2.2c.6.6.6 1.6 0 2.2L21.3 42.5c-.6.7-1.6.7-2.2 0z" />
+                                                                        </svg>
+                                                                    </span>
+                                                                </div>
+                                                                <div class="slds-col" style="padding-left:0.25rem;">
+                                                                    <span class="slds-media__body">
+                                                                        <span class="slds-truncate"
+                                                                            style="white-space: nowrap;padding: 0rem;"
+                                                                            data-id="select-type"
+                                                                            data-value="<%=item.id%>"
+                                                                            data-name="<%=item.name%>">
+                                                                            <%=item.name%>
+                                                                        </span>
+                                                                    </span>
+                                                                </div>
+                                                            </div>
+                                                        </span>
+                                                    </li>
+                                                    <%})%>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+
+
+                        <!-- SMS Content Field -->
+                        <div class="slds-form-element slds-form-element_stacked slds-size_3-of-3"
+                            id="smsContentSection">
+                            <label class="slds-form-element__label" for="smsContent">
+                                <abbr class="slds-required" title="required">* </abbr>SMS Content
+                            </label>
+                            <div class="slds-form-element__control">
+                                <div class="slds-combobox_container">
+                                    <div class="slds-combobox slds-dropdown-trigger_click"
+                                        style="top: auto;position: relative;display: inline-block;">
+                                        <div class="slds-combobox__form-element slds-input-has-icon slds-input-has-icon_right"
+                                            role="none">
+                                            <!-- Input Field -->
+                                            <input type="text" class="slds-input slds-combobox__input" id="sms-content"
+                                                aria-controls="smsContent" aria-autocomplete="list" autocomplete="off"
+                                                role="combobox" placeholder="Search SMS Content Name" />
+                                            <!-- Search Icon -->
+                                            <span
+                                                class="slds-icon_container slds-icon-utility-search slds-input__icon slds-input__icon_right"
+                                                title="Search">
+                                                <svg class="slds-icon slds-icon slds-icon_xx-small slds-icon-text-default"
+                                                    viewBox="0 0 52 52" id="down" xmlns="http://www.w3.org/2000/svg">
+                                                    <path
+                                                        d="M8.3 14h35.4c1 0 1.7 1.3.9 2.2L27.3 37.4c-.6.8-1.9.8-2.5 0L7.3 16.2c-.7-.9-.1-2.2 1-2.2z" />
+                                                </svg>
+                                            </span>
+                                        </div>
+                                        <div id="content-select" role="listbox"
+                                            style="display: block;min-width: 100% !important;"
+                                            class="slds-dropdown  slds-dropdown_left slds-hide slds-size--1-of-1">
+                                            <ul class="slds-listbox slds-listbox_vertical" role="presentation"
+                                                style="max-height: 15rem; overflow-y: auto;">
+                                                <!-- UL Items populated using JS -->
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+
+                        <div class="slds-form-element slds-form-element_stacked slds-size_3-of-3"
+                            id="smsMessageNameSection">
+                            <label class="slds-form-element__label" for="smsContent">
+                                <abbr class="slds-required" title="required">* </abbr>Message Name
+                            </label>
+                            <div class="slds-form-element__control">
+                                <input id="messageName" onchange="validateInputs(this)" type="text"
+                                    placeholder="Add your text…" class="slds-input commonValidate" maxlength="100" />
+                            </div>
+                        </div>
+
+                        <div class="slds-form-element slds-form-element_stacked slds-size_3-of-3"
+                            id="smsUnicodeSection">
+                            <label class="slds-form-element__label slds-grid slds-grid_vertical-align-center"
+                                for="sms-type-field">
+                                <span>
+                                    <abbr class="slds-required" title="required">* </abbr>
+                                    SMS Unicode Type
+                                </span>
+
+                                <!-- Help icon -->
+                                <span class="slds-form-element__icon slds-m-left_xx-small popover-anchor">
+                                    <button
+                                        class="slds-button slds-button_icon slds-button_icon-small slds-button_icon-default"
+                                        aria-haspopup="dialog" aria-expanded="false" aria-controls="smsUnicodeHelp"
+                                        type="button" onclick="toggleHelpPopover(this)">
+                                        <span class="slds-icon_container slds-icon-utility-info" title="Help">
+                                            <svg class="slds-icon slds-icon_xx-small" viewBox="0 0 52 52"
+                                                xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                                                <!-- Circle -->
+                                                <path
+                                                    d="M26 2C12.8 2 2 12.8 2 26s10.8 24 24 24 24-10.8 24-24S39.2 2 26 2z"
+                                                    fill="#0176D3" />
+                                                <!-- Question mark -->
+                                                <path
+                                                    d="M26 14c-4.4 0-8 2.9-8 6.5h4c0-1.7 1.8-3 4-3s4 1.3 4 3c0 2.6-4 3-4 6v2h4v-1c0-3 4-3.5 4-7.5 0-3.6-3.6-6-8-6zM24 34h4v4h-4z"
+                                                    fill="#FFFFFF" />
+                                            </svg>
+                                        </span>
+                                        <span class="slds-assistive-text">Help</span>
+                                    </button>
+
+                                    <!-- Popover -->
+                                    <div id="smsUnicodeHelp"
+                                        class="slds-popover slds-popover_tooltip slds-nubbin_top-left slds-hide"
+                                        role="dialog">
+                                        <div class="slds-popover__body">
+                                            Select UNICODE if your message contains Vietnamese characters
+                                        </div>
+                                    </div>
+                                </span>
+                            </label>
+
+
+                            <div class="slds-form-element__control">
+                                <div class="slds-combobox_container">
+                                    <div class="slds-combobox slds-dropdown-trigger_click"
+                                        style="top: auto;position: relative;display: inline-block;">
+                                        <div class="slds-combobox__form-element slds-input-has-icon slds-input-has-icon_right"
+                                            role="none">
+                                            <input type="text" class="slds-input slds-combobox__input" id="sms-unicode"
+                                                aria-controls="sms-type-field" aria-autocomplete="list"
+                                                autocomplete="off" role="combobox"
+                                                placeholder="Search SMS Unicode Type" />
+                                            <span
+                                                class="slds-icon_container slds-icon-utility-search slds-input__icon slds-input__icon_right"
+                                                title="Search">
+                                                <svg class="slds-icon slds-icon slds-icon_xx-small slds-icon-text-default"
+                                                    viewBox="0 0 52 52" id="down" xmlns="http://www.w3.org/2000/svg">
+                                                    <path
+                                                        d="M8.3 14h35.4c1 0 1.7 1.3.9 2.2L27.3 37.4c-.6.8-1.9.8-2.5 0L7.3 16.2c-.7-.9-.1-2.2 1-2.2z" />
+                                                </svg>
+                                            </span>
+                                        </div>
+                                        <div id="sms-unicode-field" role="listbox"
+                                            style="display: block;min-width: 100% !important;"
+                                            class="slds-dropdown  slds-dropdown_left slds-hide slds-size--1-of-1">
+                                            <ul class="slds-listbox slds-listbox_vertical" role="presentation"
+                                                style="max-height: 15rem; overflow-y: auto;">
+                                                <% smsUnicode.forEach(item=> { %>
+                                                    <li role="presentation" class="slds-listbox__item"
+                                                        data-id="option-unicode" data-value="<%=item.id%>">
+                                                        <span
+                                                            class="slds-media slds-listbox__option slds-listbox__option_plain slds-media_small"
+                                                            style="min-width: min-content;padding: 0.5rem;"
+                                                            role="option" tabindex="-1">
+                                                            <div class="slds-grid slds-size--1-of-1">
+                                                                <div class="slds-col"
+                                                                    style="padding-left: 0rem;padding-right: 0rem;width:15px;max-width: 15px;">
+                                                                    <span class="slds-media__figure">
+                                                                        <svg class="slds-icon slds-icon slds-icon_xx-small slds-icon-text-default"
+                                                                            viewBox="0 0 52 52" id="check"
+                                                                            xmlns="http://www.w3.org/2000/svg">
+                                                                            <path data-id="checked-icon"
+                                                                                class="slds-hide"
+                                                                                d="M19.1 42.5L2.6 25.9c-.6-.6-.6-1.6 0-2.2l2.2-2.2c.6-.6 1.6-.6 2.2 0L19.4 34c.4.4 1.1.4 1.5 0L45.2 9.5c.6-.6 1.6-.6 2.2 0l2.2 2.2c.6.6.6 1.6 0 2.2L21.3 42.5c-.6.7-1.6.7-2.2 0z" />
+                                                                        </svg>
+                                                                    </span>
+                                                                </div>
+                                                                <div class="slds-col" style="padding-left:0.25rem;">
+                                                                    <span class="slds-media__body">
+                                                                        <span class="slds-truncate"
+                                                                            style="white-space: nowrap;padding: 0rem;"
+                                                                            data-id="select-unicode"
+                                                                            data-value="<%=item.id%>"
+                                                                            data-name="<%=item.name%>">
+                                                                            <%=item.name%>
+                                                                        </span>
+                                                                    </span>
+                                                                </div>
+                                                            </div>
+                                                        </span>
+                                                    </li>
+                                                    <%})%>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+
+                        <input type="text" style="display: none;" id="content-loaded" value="false"></input>
+
+
+                    </div>
+                </div>
+
+
+
+                <!-- Content Preview Section -->
+                <div id="previewContent"
+                    class="slds-col slds-size_3-of-5 preContent slds-box slds-box_xx-small slds-rounded_medium"
+                    style="display: block;">
+                    <iframe id="previewFrame"></iframe>
+
+                    <!-- Illustration -->
+                    <div id="previewIllustration"
+                        style="display: flex;justify-content: center;align-items: center;height: 100%;margin: 0;">
+                        <div style="text-align: center;">
+                            <div class="slds-illustration slds-illustration_small" style="max-height: 200px;">
+                                <svg class="slds-illustration__svg" viewBox="0 0 468 194" aria-hidden="true"
+                                    xmlns="http://www.w3.org/2000/svg">
+                                    <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+                                        <g transform="translate(-67.000000, -112.000000)">
+                                            <g>
+                                                <g transform="translate(245.000000, 200.000000)"
+                                                    class="slds-illustration__stroke-secondary" stroke-linecap="round"
+                                                    stroke-width="3">
+                                                    <path vector-effect="non-scaling-stroke"
+                                                        d="M44,17.5 L63,17.5 C62.2789714,12.0723971 64.081543,7.53186978 68.4077148,3.87841797 C73.3754883,-0.195556641 79.2734375,0.717773438 82.440918,2.12353516 C85.6083984,3.52929687 87.9606934,5.46069336 89.5913086,9.10524041 C90.2822266,10.6397351 90.7517904,11.9379883 91,13">
+                                                    </path>
+                                                    <path vector-effect="non-scaling-stroke"
+                                                        d="M83,20.5 C84.0558268,16.8461914 86.2227376,14.4572754 89.5007324,13.333252 C94.4177246,11.6472168 99.0800781,13.8925781 100.942383,16.1518555 C102.804687,18.4111328 103.39502,20.2260742 103.746582,22.1201172 C103.980957,23.3828125 104.06543,24.8427734 104,26.5 C108.141764,26.3313802 110.918945,27.1647135 112.331543,29 C114.040039,31.1936035 114.215332,33.817627 113.593018,35.75 C112.970703,37.682373 110.894531,40.5 107,40.5 L28,40.5">
+                                                    </path>
+                                                    <path vector-effect="non-scaling-stroke"
+                                                        d="M18,27.5 L83.0004985,27.5"></path>
+                                                    <path vector-effect="non-scaling-stroke" d="M0,27.5 L8,27.5"></path>
+                                                </g>
+                                                <g transform="translate(135.000000, 152.000000)"
+                                                    class="slds-illustration__stroke-secondary" stroke-linecap="round"
+                                                    stroke-width="3">
+                                                    <path vector-effect="non-scaling-stroke"
+                                                        d="M44,17.5 L63,17.5 C62.2789714,12.0723971 64.081543,7.53186978 68.4077148,3.87841797 C73.3754883,-0.195556641 79.2734375,0.717773438 82.440918,2.12353516 C85.6083984,3.52929687 87.9606934,5.46069336 89.5913086,9.10524041 C90.2822266,10.6397351 90.7517904,11.9379883 91,13">
+                                                    </path>
+                                                    <path vector-effect="non-scaling-stroke"
+                                                        d="M83,20.5 C84.0558268,16.8461914 86.2227376,14.4572754 89.5007324,13.333252 C94.4177246,11.6472168 99.0800781,13.8925781 100.942383,16.1518555 C102.804687,18.4111328 103.39502,20.2260742 103.746582,22.1201172 C103.980957,23.3828125 104.06543,24.8427734 104,26.5 C108.141764,26.3313802 110.918945,27.1647135 112.331543,29 C114.040039,31.1936035 114.215332,33.817627 113.593018,35.75 C112.970703,37.682373 110.894531,40.5 107,40.5 L28,40.5">
+                                                    </path>
+                                                    <path vector-effect="non-scaling-stroke"
+                                                        d="M18,27.5 L83.0004985,27.5"></path>
+                                                    <path vector-effect="non-scaling-stroke" d="M0,27.5 L8,27.5"></path>
+                                                </g>
+                                                <g transform="translate(69.000000, 256.000000)"
+                                                    class="slds-illustration__stroke-secondary" stroke-linecap="round"
+                                                    stroke-width="3">
+                                                    <path vector-effect="non-scaling-stroke" d="M14,36.5 L464,36.5">
+                                                    </path>
+                                                    <path vector-effect="non-scaling-stroke" d="M0,36.5 L6,36.5"></path>
+                                                    <polyline vector-effect="non-scaling-stroke" stroke-linejoin="round"
+                                                        points="234.5 36 279.5 0 313.5 26"></polyline>
+                                                    <path vector-effect="non-scaling-stroke" d="M279.5,1 L279.5,35"
+                                                        stroke-linejoin="round"></path>
+                                                    <path vector-effect="non-scaling-stroke"
+                                                        d="M313.5,11 C313.5,20.7437888 313.5,25.7437888 313.5,26 C313.5,25.7437888 313.5,20.7437888 313.5,11 Z"
+                                                        stroke-linejoin="round"></path>
+                                                    <polyline vector-effect="non-scaling-stroke" stroke-linejoin="round"
+                                                        points="303.5 17 313.5 9 347.5 36"></polyline>
+                                                </g>
+                                                <g transform="translate(113.000000, 178.000000)">
+                                                    <g transform="translate(30.000000, 8.000000)"
+                                                        class="slds-illustration__fill-secondary">
+                                                        <path vector-effect="non-scaling-stroke"
+                                                            d="M29.5,60.5 L29.5,12 C29.5,5.372583 34.872583,0 41.5,0 C48.127417,0 53.5,5.372583 53.5,12 L53.5,40.5 L70.5,40.5 L70.5,27 C70.5,23.1340068 73.6340068,20 77.5,20 C81.3659932,20 84.5,23.1340068 84.5,27 L84.5,48.5 C84.5,51.8137085 81.8137085,54.5 78.5,54.5 L53.5,54.5 L53.5,118.5 L29.5,118.5 L29.5,74.5 L6.5,74.5 C3.1862915,74.5 0.5,71.8137085 0.5,68.5 L0.5,39 C0.5,35.1340068 3.63400675,32 7.5,32 C11.3659932,32 14.5,35.1340068 14.5,39 L14.5,60.5 L29.5,60.5 Z">
+                                                        </path>
+                                                    </g>
+                                                    <g transform="translate(59.000000, 7.000000)" fill="#FFFFFF">
+                                                        <path vector-effect="non-scaling-stroke"
+                                                            d="M2,11 C3.65332031,8.49145508 5.65181478,6.77364095 7.9954834,5.84655762 C11.5109863,4.45593262 15.2684326,4.95605469 17.8156738,6.2824707 C20.362915,7.60888672 22.3626709,9.64978027 23.2602539,11.81604 C23.8586426,13.2602132 23.8586426,11.7547201 23.2602539,7.29956055 L19.612793,3.56494141 L13.7923584,0.564331055 L8.765625,1.42663574 L4.67321777,3.19787598 C2.69893392,5.13902708 1.69559733,6.16722532 1.66320801,6.2824707 C1.61462402,6.45533878 0.856079102,9.49145508 0.813964844,9.66003418 C0.785888672,9.77242025 1.18123372,10.2190755 2,11 Z">
+                                                        </path>
+                                                    </g>
+                                                    <g class="slds-illustration__stroke-primary" stroke-width="3">
+                                                        <path vector-effect="non-scaling-stroke" d="M0,126.5 L356,126.5"
+                                                            stroke-linecap="round"></path>
+                                                        <path vector-effect="non-scaling-stroke"
+                                                            d="M362.5,126.5 L372.013149,126.5" stroke-linecap="round">
+                                                        </path>
+                                                        <path vector-effect="non-scaling-stroke" d="M107.5,20 L107.5,28"
+                                                            stroke-linecap="round"></path>
+                                                        <path vector-effect="non-scaling-stroke"
+                                                            d="M113,30.6568542 L118.656854,25" stroke-linecap="round">
+                                                        </path>
+                                                        <path vector-effect="non-scaling-stroke" d="M37.5,32 L37.5,40"
+                                                            stroke-linecap="round"></path>
+                                                        <path vector-effect="non-scaling-stroke"
+                                                            d="M44,42.6568542 L49.6568542,37" stroke-linecap="round">
+                                                        </path>
+                                                        <path vector-effect="non-scaling-stroke"
+                                                            d="M25,42.6568542 L30.6568542,37" stroke-linecap="round"
+                                                            transform="translate(27.828427, 39.828427) scale(-1, 1) translate(-27.828427, -39.828427) ">
+                                                        </path>
+                                                        <path vector-effect="non-scaling-stroke" d="M71.5,0 L71.5,8"
+                                                            stroke-linecap="round"></path>
+                                                        <path vector-effect="non-scaling-stroke"
+                                                            d="M79,10.6568542 L84.6568542,5" stroke-linecap="round">
+                                                        </path>
+                                                        <path vector-effect="non-scaling-stroke"
+                                                            d="M58,10.6568542 L63.6568542,5" stroke-linecap="round"
+                                                            transform="translate(60.828427, 7.828427) scale(-1, 1) translate(-60.828427, -7.828427) ">
+                                                        </path>
+                                                        <path vector-effect="non-scaling-stroke"
+                                                            d="M59.5,68.5 L59.5,20 C59.5,13.372583 64.872583,8 71.5,8 C78.127417,8 83.5,13.372583 83.5,20 L83.5,48.5 L100.5,48.5 L100.5,35 C100.5,31.1340068 103.634007,28 107.5,28 C111.365993,28 114.5,31.1340068 114.5,35 L114.5,56.5 C114.5,59.8137085 111.813708,62.5 108.5,62.5 L83.5,62.5 L83.5,126.5 L59.5,126.5 L59.5,82.5 L36.5,82.5 C33.1862915,82.5 30.5,79.8137085 30.5,76.5 L30.5,47 C30.5,43.1340068 33.6340068,40 37.5,40 C41.3659932,40 44.5,43.1340068 44.5,47 L44.5,68.5 L59.5,68.5 Z">
+                                                        </path>
+                                                        <path vector-effect="non-scaling-stroke"
+                                                            d="M77,88.5 L92.5,88.5 L92.5,81 C92.5,77.1340068 95.6340068,74 99.5,74 L99.5,74 C103.365993,74 106.5,77.1340068 106.5,81 L106.5,96.5 C106.5,99.8137085 103.813708,102.5 100.5,102.5 L77,102.5"
+                                                            class="slds-illustration__fill-secondary"
+                                                            stroke-linecap="round" stroke-linejoin="round"></path>
+                                                    </g>
+                                                </g>
+                                                <g transform="translate(429.000000, 242.000000)"
+                                                    class="slds-illustration__stroke-secondary" stroke-linecap="round"
+                                                    stroke-width="3">
+                                                    <g>
+                                                        <path vector-effect="non-scaling-stroke" d="M12.5,4 L12.5,50">
+                                                        </path>
+                                                        <polyline vector-effect="non-scaling-stroke"
+                                                            stroke-linejoin="round" points="11 18.5 0.5 18.5 0.5 0">
+                                                        </polyline>
+                                                        <polyline vector-effect="non-scaling-stroke"
+                                                            stroke-linejoin="round" points="14 25.5 24.5 25.5 24.5 8">
+                                                        </polyline>
+                                                        <polyline vector-effect="non-scaling-stroke"
+                                                            stroke-linejoin="round" points="2.5 31 2.5 38.5 11 38.5">
+                                                        </polyline>
+                                                    </g>
+                                                </g>
+                                                <g transform="translate(327.000000, 95.000000)">
+                                                    <g>
+                                                        <circle vector-effect="non-scaling-stroke"
+                                                            class="slds-illustration__fill-secondary" cx="64" cy="64"
+                                                            r="23"></circle>
+                                                        <circle vector-effect="non-scaling-stroke"
+                                                            class="slds-illustration__stroke-secondary" stroke-width="3"
+                                                            stroke-linecap="round" stroke-linejoin="round"
+                                                            stroke-dasharray="135,1,1,18"
+                                                            transform="translate(64.000000, 64.000000) rotate(230.000000) translate(-64.000000, -64.000000) "
+                                                            cx="64" cy="64" r="45"></circle>
+                                                        <circle vector-effect="non-scaling-stroke"
+                                                            class="slds-illustration__stroke-secondary" stroke-width="3"
+                                                            stroke-linecap="round" stroke-linejoin="round"
+                                                            stroke-dasharray="107,10"
+                                                            transform="translate(64.000000, 64.000000) rotate(150.000000) translate(-64.000000, -64.000000) "
+                                                            cx="64" cy="64" r="33"></circle>
+                                                    </g>
+                                                    <g transform="translate(41.000000, 41.000000)"
+                                                        class="slds-illustration__stroke-primary" stroke-width="3">
+                                                        <circle vector-effect="non-scaling-stroke" cx="23" cy="23"
+                                                            r="23"></circle>
+                                                    </g>
+                                                </g>
+                                            </g>
+                                        </g>
+                                    </g>
+                                </svg>
+                                <div class="slds-text-longform">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <br><br>
+    </article>
+
+
+
+    <script type="module" src="/js/custom_activity.js"></script>
+    <script>
+        document.getElementById('smsContentSection').style.display = 'block';
+        document.getElementById('previewContent').style.display = 'block';
+    </script>
+
+    <script>
+        function toggleHelpPopover(button) {
+            const popoverId = button.getAttribute('aria-controls');
+            const popover = document.getElementById(popoverId);
+            const isOpen = !popover.classList.contains('slds-hide');
+
+            // Close all popovers (optional safety)
+            document.querySelectorAll('.slds-popover').forEach(p => {
+                p.classList.add('slds-hide');
+            });
+            document.querySelectorAll('[aria-expanded="true"]').forEach(b => {
+                b.setAttribute('aria-expanded', 'false');
+            });
+
+            // Toggle current popover
+            if (!isOpen) {
+                popover.classList.remove('slds-hide');
+                button.setAttribute('aria-expanded', 'true');
+            }
+        }
+    </script>
+
+
+</html>

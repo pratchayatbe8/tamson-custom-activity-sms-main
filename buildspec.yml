@@ -1,0 +1,24 @@
+version: 0.2
+
+phases:
+  install:
+    commands:
+      - (cd add-to-queue; npm install)
+      - (cd upload-to-einstein; npm install)
+      - sam --version
+  build:
+    commands:
+      - echo $STAGE
+      - sam build
+      - |
+        sam deploy \
+         --stack-name mktcloud-einstein-$STAGE \
+         --tags application=mktcloud \
+         --capabilities CAPABILITY_IAM CAPABILITY_NAMED_IAM CAPABILITY_AUTO_EXPAND \
+         --no-confirm-changeset \
+         --s3-bucket mktcloud-artifacts-$AccountId \
+         --parameter-overrides StageName=$STAGE SFMCClientSecret=$SFMC_CLIENT_SECRET \
+         --debug
+artifacts:
+  files:
+    - "**/*"
