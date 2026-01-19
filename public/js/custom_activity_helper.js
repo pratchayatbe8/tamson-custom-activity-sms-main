@@ -287,7 +287,7 @@ export function loadPreviewContent(content, selectedOA, isLoad) {
         let messageType = getCheckedAttr('select-type', 'data-value');
 
         if (messageType === 'SMS')
-            endpoint = `/custom-activity/getContent/${content}`;
+            endpoint = `/sms/custom-activity-main/getContent/${content}`;
 
         fetch(endpoint, {
             method: 'GET',
@@ -392,7 +392,7 @@ export function loadContent(messageType, selectedValue, selectedName, oa, connec
 
     //Load the Content Blocks
     if (messageType === 'SMS') {
-        fetch('/custom-activity/getSMSMessages', {
+        fetch('/sms/custom-activity-main/getSMSMessages', {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',

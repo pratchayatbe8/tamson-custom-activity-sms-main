@@ -2,6 +2,8 @@ const { createLogger, format, transports } = require('winston');
 const path = require('path');
 
 module.exports = createLogger({
+    level: 'debug', 
+
     transports: [
         new transports.File({
             maxsize: 20971520,
@@ -12,6 +14,12 @@ module.exports = createLogger({
                 format.align(),
                 format.printf(info => `${info.timestamp},${info.level},${info.message}`),
         )}),
-        new transports.Console()
+
+        new transports.Console({
+            format: format.combine(
+                format.colorize(),
+                format.simple()
+            )
+        })
     ]
 });

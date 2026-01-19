@@ -1,6 +1,6 @@
 const mc = require('./mc');
 const NodeCache = require('node-cache');
-const myCache = new NodeCache( { stdTTL: 3600 });
+const myCache = new NodeCache( { stdTTL: 300 });
 const config = require('../config');
 
 const util = {};
