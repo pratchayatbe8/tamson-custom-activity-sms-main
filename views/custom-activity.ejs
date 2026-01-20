@@ -42,11 +42,21 @@
 
         .popover-anchor .slds-popover {
             position: absolute;
-            top: 1.8rem;
             left: -12px;
+            top: 40px;
             z-index: 10000;
             width: 300px;
         }
+
+        /* Fix Popover rendering with arrow */
+        .slds-popover_tooltip {
+            z-index: 10000 !important;
+        }
+
+        .slds-combobox_container {
+            z-index: 0 !important;
+        }
+
     </style>
 </head>
 
